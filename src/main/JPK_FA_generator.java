@@ -1,5 +1,6 @@
 package main;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,7 +17,6 @@ import jpk.CurrCodeType;
 import jpk.JPK;
 import jpk.JPK.Naglowek;
 import jpk.ObjectFactory;
-import jpk.TKodFormularza;
 import jpk.TNaglowek.KodFormularza;
 
 public class JPK_FA_generator {
@@ -58,28 +58,38 @@ public class JPK_FA_generator {
 		naglowek.setDomyslnyKodWaluty(CurrCodeType.PLN);
 		
 		
-		
-		
-		
 		jpkFA.setNaglowek(naglowek);
 		
-		
+		File file=null;
 		try {
 
-			//File file = new File("C:\\file.xml");
+			file = new File("C:\\Users\\TOMEK\\eclipse-workspace\\JPK_FA_GEN\\jpk_fa.xml");
 			jaxbContext = JAXBContext.newInstance(JPK.class);
 			jaxbMarshaller = jaxbContext.createMarshaller();
 
 			// output pretty printed
 			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-			//jaxbMarshaller.marshal(jpkFA, file);
+			jaxbMarshaller.marshal(jpkFA, file);
 			jaxbMarshaller.marshal(jpkFA, System.out);
 
 		      } catch (JAXBException e) {
 			e.printStackTrace();
 		      }
 
+//-----------------------sprawdzanie poprawnoœci xml do xsd		
+		
+		XML_validator validator = new XML_validator();
+		
+		String xmlPath="./jpk_fa.xml";
+		String xsdPath="./Schemat_JPK_FA(1)_v1-0.xsd";
+		//System.out.println(xmlString);
+		try {
+			validator.validate(xmlPath,xsdPath );
+		} catch (ValidationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
